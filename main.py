@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from TF_IDF_Calculate import tfidf_df  # ดึง DataFrame โดยตรงจาก TF_IDF_Calculate
 
 st.set_page_config(
     page_title="Top TF-IDF Words",
@@ -10,7 +9,9 @@ st.set_page_config(
 
 st.title("Top TF-IDF Words")
 
-# สร้าง DataFrame
+# ดึง DataFrame จากไฟล์ CSV
+tfidf_df = pd.read_csv('tfidf_results.csv')
+
 data = {
     "Word": tfidf_df["word"],
     "TF-IDF": tfidf_df["tfidf"]
@@ -45,6 +46,5 @@ st.write("### กราฟ TF-IDF ของคำ")
 st.line_chart(df)
 
 st.sidebar.title("Navigation")
-# สร้าง sidebar
+#สร้าง sidebar
 st.sidebar.markdown("**Choose a Trend:**")
-selected_trend = st.sidebar.selectbox("", df["Word"])
