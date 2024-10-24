@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+from TF_IDF_Calculate import tfidf_df  # ดึง DataFrame โดยตรงจาก TF_IDF_Calculate
 
 st.set_page_config(
     page_title="Top TF-IDF Words",
@@ -10,27 +10,28 @@ st.set_page_config(
 
 st.title("Top TF-IDF Words")
 
-# อ่านไฟล์ CSV ที่บันทึกผลลัพธ์จาก TF-IDF
-tfidf_df = pd.read_csv('tfidf_results.csv')
-
 # สร้าง DataFrame
 data = {
     "Word": tfidf_df["word"],
     "TF-IDF": tfidf_df["tfidf"]
 }
+
+# สร้าง DataFrame
 df = pd.DataFrame(data)
 
 # หาคำที่มีค่า TF-IDF สูงสุด
 max_tfidf_word = df.loc[df['TF-IDF'].idxmax()]
 
-# แสดงตารางข้อมูลทางฝั่งซ้ายในส่วนขยายได้
+# สร้างคอลัมน์เพื่อแบ่งพื้นที่จอให้สมดุล
 col1, col2 = st.columns([1, 1])
 
+# แสดงตารางข้อมูลทางฝั่งซ้ายในส่วนขยายได้
 with col1:
     with st.expander("ดูตารางข้อมูล TF-IDF"):
         st.write("### ข้อมูล TF-IDF")
         st.dataframe(df)
 
+# แสดงคำฮิตประจำสัปดาห์ทางฝั่งขวา พร้อมเพิ่มขนาดตัวอักษร
 with col2:
     st.write("### คำที่ฮิตประจำสัปดาห์")
     st.markdown(f"<h2 style='font-size: 32px;'>{max_tfidf_word['Word']}</h2>", unsafe_allow_html=True)
@@ -44,4 +45,6 @@ st.write("### กราฟ TF-IDF ของคำ")
 st.line_chart(df)
 
 st.sidebar.title("Navigation")
+# สร้าง sidebar
 st.sidebar.markdown("**Choose a Trend:**")
+selected_trend = st.sidebar.selectbox("", df["Word"])
